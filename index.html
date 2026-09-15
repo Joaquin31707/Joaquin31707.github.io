@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoGuía | Hábitos sostenibles</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="contenedor">
+        <header>
+            <p class="marca">✦ ECOGUÍA</p>
+            <p class="subtitulo">CHEQUEO DIARIO</p>
+            <h1>Un día mejor para la <span>Tierra.</span></h1>
+            <p class="descripcion"> Responde estas preguntas y recibe recomendaciones para cuidar el planeta. </p>
+        </header>
+        <section class="tarjeta" id="cuestionario">
+            <div class="progreso-texto"> <span>Tu chequeo diario</span> <span id="contador"></span> </div>
+            <div class="barra">
+                <div id="progreso"></div>
+            </div>
+            <p class="numero" id="numero"></p>
+            <h2 id="pregunta"></h2>
+            <p class="ayuda" id="ayuda"></p>
+            <div class="botones"> <button id="si">Sí, lo hice ↗</button> <button id="no">Aún no →</button> </div>
+        </section>
+        <section class="resultado" id="resultado" hidden>
+            <p class="subtitulo">TU RESULTADO DE HOY</p>
+            <div class="puntaje"> <strong id="puntaje">0</strong> <span>/ 6</span> </div>
+            <h2 id="tituloResultado"></h2>
+            <p id="mensajeResultado"></p>
+            <div id="recomendaciones"></div> <button id="reiniciar"> Hacer el chequeo otra vez </button>
+        </section>
+        <footer> HECHO PARA ACCIONES REALES, NO PARA CULPAS. ✦ </footer>
+    </main>
+    <script> const preguntas = [{ titulo: "¿Reciclaste o separaste residuos correctamente hoy?", ayuda: "Cuenta materiales que tu localidad acepta para reciclar.", recomendacion: "Prepara una bolsa para separar residuos reciclables mañana." }, { titulo: "¿Elegiste una forma de moverte con menos emisiones?", ayuda: "Caminar, bicicleta, transporte público o compartir viaje cuenta.", recomendacion: "Prueba caminar, usar bicicleta o transporte público en un trayecto corto." }, { titulo: "¿Reutilizaste algo o evitaste un producto desechable?", ayuda: "Una botella o bolsa reutilizable también suma.", recomendacion: "Deja una botella reutilizable y una bolsa de tela cerca de tus llaves." }, { titulo: "¿Cuidaste la energía en tu casa?", ayuda: "Apagar luces y desconectar cargadores ayuda.", recomendacion: "Antes de dormir, apaga algo que no estés usando." }, { titulo: "¿Evitaste desperdiciar comida?", ayuda: "Planificar porciones y aprovechar sobras cuenta.", recomendacion: "Revisa lo que ya tienes antes de comprar alimentos." }, { titulo: "¿Usaste el agua con conciencia?", ayuda: "Una ducha corta y cerrar el grifo ayuda.", recomendacion: "Intenta que tu próxima ducha dure menos tiempo." }]; let preguntaActual = 0; let respuestas = []; const pregunta = document.getElementById("pregunta"); const ayuda = document.getElementById("ayuda"); const numero = document.getElementById("numero"); const contador = document.getElementById("contador"); const progreso = document.getElementById("progreso"); const resultado = document.getElementById("resultado"); const cuestionario = document.getElementById("cuestionario"); function mostrarPregunta() { const actual = preguntas[preguntaActual]; pregunta.textContent = actual.titulo; ayuda.textContent = actual.ayuda; numero.textContent = String(preguntaActual + 1).padStart(2, "0"); contador.textContent = String(preguntaActual + 1) + " de " + String(preguntas.length); progreso.style.width = String(((preguntaActual + 1) / preguntas.length) * 100) + "%"; } function responder(valor) { respuestas.push(valor); if (preguntaActual < preguntas.length - 1) { preguntaActual++; mostrarPregunta(); return; } mostrarResultado(); } function mostrarResultado() { cuestionario.hidden = true; resultado.hidden = false; let puntos = 0; respuestas.forEach(function (respuesta) { if (respuesta === true) { puntos++; } }); document.getElementById("puntaje").textContent = String(puntos); let titulo = ""; let mensaje = ""; if (puntos >= 5) { titulo = "¡Tuviste un gran día para la Tierra!"; mensaje = "Tus acciones cuentan. Mantén tus hábitos y comparte una idea con otra persona."; } else if (puntos >= 3) { titulo = "Vas construyendo un cambio real."; mensaje = "Cada acción positiva suma. Elige una recomendación para intentar mañana."; } else { titulo = "Mañana es una nueva oportunidad."; mensaje = "No tienes que hacerlo todo. Elige una acción pequeña para tu siguiente día."; } document.getElementById("tituloResultado").textContent = titulo; document.getElementById("mensajeResultado").textContent = mensaje; const recomendaciones = document.getElementById("recomendaciones"); recomendaciones.innerHTML = ""; preguntas.forEach(function (item, indice) { if (respuestas[indice] === false) { const caja = document.createElement("div"); caja.className = "recomendacion"; caja.textContent = item.recomendacion; recomendaciones.appendChild(caja); } }); if (recomendaciones.innerHTML === "") { const caja = document.createElement("div"); caja.className = "recomendacion"; caja.textContent = "Reto para mañana: comparte uno de tus hábitos sostenibles con otra persona."; recomendaciones.appendChild(caja); } } document.getElementById("si").addEventListener("click", function () { responder(true); }); document.getElementById("no").addEventListener("click", function () { responder(false); }); document.getElementById("reiniciar").addEventListener("click", function () { preguntaActual = 0; respuestas = []; resultado.hidden = true; cuestionario.hidden = false; mostrarPregunta(); }); mostrarPregunta(); </script>
+</body>
+
+</html>
